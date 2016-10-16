@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Caracal Network</string>
+    <string name="no_internet_main">Your device is not connected to the internet</string>
+    <string name="no_internet_sub">Please connect to the internet to load server status</string>
+</resources>
