@@ -75,6 +75,8 @@ public class GeneralItemActivity extends AppCompatActivity {
             }
         });
         playerRefresh.setColorSchemeResources(R.color.orange, R.color.black, R.color.green, R.color.blue, R.color.colorAccent);
+
+        initializeData(false);
     }
 
     private void initializeData(boolean refresh) {
@@ -83,7 +85,7 @@ public class GeneralItemActivity extends AppCompatActivity {
         if (info != null && info.isConnected()) {
             getDataFromServer(refresh);
         } else {
-            findViewById(R.id.networkError).setVisibility(View.VISIBLE);
+            //findViewById(R.id.networkError).setVisibility(View.VISIBLE);
         }
     }
 
@@ -100,17 +102,15 @@ public class GeneralItemActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int i, Header[] headers, String s) {
                 JsonObject obj = new JsonParser().parse(s).getAsJsonObject();
-                GeneralWrapper wrapper = new GeneralWrapper(obj.get("UP").getAsInt(), true, 0);
-                GeneralWrapper wrapper1 = new GeneralWrapper(obj.get("PLAYERS").getAsInt(), false, 1);
-                GeneralWrapper wrapper2 = new GeneralWrapper(obj.get("WORLDS").getAsInt(), false, 2);
+                PlayerWrapper wrapper = new PlayerWrapper("TheRealKS", "b411d515b4d84bed8ac6ebe72abdcd47", false);
+                PlayerWrapper wrapper1 = new PlayerWrapper("BaasS", "82fe8715161842fb8cb5beadd22eedb6", false);
                 data.clear();
                 data.add(wrapper);
                 data.add(wrapper1);
-                data.add(wrapper2);
                 playerAdapter.notifyDataSetChanged();
                 if (r) playerRefresh.setRefreshing(false);
                 else findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-                findViewById(R.id.general_cards).setVisibility(View.VISIBLE);
+                findViewById(R.id.player_cards).setVisibility(View.VISIBLE);
                 Log.i("ASYNCHTTPREQUEST", "Downloaded 3 items from website!");
             }
         });
