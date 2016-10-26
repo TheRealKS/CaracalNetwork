@@ -5,11 +5,13 @@ public class PlayerWrapper {
     private String name;
     private String uuid;
     private boolean AFK;
+    private String world;
 
-    public PlayerWrapper(String n, String u, boolean afk) {
+    public PlayerWrapper(String n, String u, boolean afk, String w) {
         this.name = n;
         this.uuid = u;
         this.AFK = afk;
+        this.world = w;
     }
 
     public String getName() {
@@ -22,5 +24,9 @@ public class PlayerWrapper {
 
     public boolean isAFK() {
         return AFK;
+    }
+
+    public String getWorld() {
+        return world;
     }
 }

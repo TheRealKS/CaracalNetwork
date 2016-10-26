@@ -49,6 +49,8 @@
             tools:text="@string/no_internet_sub" />
 
         <Button
+            android:clickable="true"
+            android:focusable="true"
             android:text="Try Again"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

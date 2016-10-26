@@ -14,6 +14,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -27,6 +29,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
@@ -79,11 +82,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeData(boolean refresh) {
+        overviewRefresh.setEnabled(false);
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = connMgr.getActiveNetworkInfo();
         if (info != null && info.isConnected()) {
             getDataFromServer(refresh);
         } else {
+            TextView t = (TextView) findViewById(R.id.textView);
+            TextView tt = (TextView) findViewById(R.id.textView2);
+            Button b = (Button) findViewById(R.id.button);
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    findViewById(R.id.networkError).setVisibility(View.GONE);
+                    findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+                    initializeData(false);
+                }
+            });
+            t.setText(R.string.no_internet_main);
+            tt.setText(R.string.no_internet_sub);
+            if (refresh) overviewRefresh.setRefreshing(false);
+            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+            findViewById(R.id.general_cards).setVisibility(View.GONE);
             findViewById(R.id.networkError).setVisibility(View.VISIBLE);
         }
     }
@@ -110,8 +130,10 @@ public class MainActivity extends AppCompatActivity {
                 data.add(wrapper2);
                 overviewAdapter.notifyDataSetChanged();
                 if (r) overviewRefresh.setRefreshing(false);
-                else findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                 findViewById(R.id.general_cards).setVisibility(View.VISIBLE);
+                findViewById(R.id.networkError).setVisibility(View.GONE);
+                overviewRefresh.setEnabled(true);
                 Log.i("ASYNCHTTPREQUEST", "Downloaded 3 items from website!");
             }
         });
