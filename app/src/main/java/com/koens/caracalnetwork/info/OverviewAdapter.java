@@ -20,6 +20,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
 
     private List<GeneralWrapper> data;
     private Context context;
+    private boolean up;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView txt;
@@ -53,16 +54,22 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
                 holder.txt.setText("Server is up");
                 holder.img.setBackground(context.getDrawable(R.drawable.circle_green));
                 holder.img.setImageDrawable(context.getDrawable(R.drawable.ic_done_black_24dp));
+                up = true;
             } else {
                 holder.txt.setText("Server is down");
                 holder.img.setBackground(context.getDrawable(R.drawable.divider_red));
                 holder.img.setImageDrawable(context.getDrawable(R.drawable.ic_close_black_24dp));
+                up = false;
             }
         } else {
             TextDrawable drawable = TextDrawable.builder()
                     .buildRound(Integer.toString(data.get(position).getValue()), R.color.colorAccent);
             holder.img.setImageDrawable(drawable);
-            holder.txt.setText(Integer.toString(data.get(position).getValue()));
+            if (position == 1) {
+                holder.txt.setText("players are online");
+            } else if (position == 2) {
+                holder.txt.setText("worlds on this server");
+            }
         }
         final GeneralWrapper wrapper = data.get(position);
         holder.ll.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +79,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
                     Intent intent = new Intent(context, GeneralItemActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("SOURCE", wrapper.getViewType());
+                    intent.putExtra("SERVERUP", up);
                     context.startActivity(intent);
                 }
             }

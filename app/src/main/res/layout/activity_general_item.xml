@@ -18,6 +18,59 @@
             android:indeterminate="true" />
     </RelativeLayout>
 
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/networkError"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone">
+
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/textView"
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            tools:text="@string/no_internet_main" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/textView2"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            tools:text="@string/no_internet_sub" />
+
+        <Button
+            android:clickable="true"
+            android:focusable="true"
+            android:text="Try Again"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView2"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/button"
+            android:elevation="12dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            android:textSize="10sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/ic_warning_black_24dp"
+            android:id="@+id/imageView2"
+            android:layout_marginBottom="63dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/players_refresh"
         android:layout_width="match_parent"

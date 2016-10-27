@@ -17,6 +17,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -47,6 +49,7 @@ public class GeneralItemActivity extends AppCompatActivity {
     List<WorldWrapper> wdata = new ArrayList<>();
 
     ActivityMode type;
+    boolean ServerUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,7 @@ public class GeneralItemActivity extends AppCompatActivity {
                 viewType = 1;
             } else {
                 viewType = extras.getInt("SOURCE");
+                ServerUp = extras.getBoolean("SERVERUP");
             }
         } else {
             String s = (String) savedInstanceState.getSerializable("SOURCE");
@@ -98,13 +102,33 @@ public class GeneralItemActivity extends AppCompatActivity {
         initializeData(false, type);
     }
 
-    private void initializeData(boolean refresh, ActivityMode mode) {
+    private void initializeData(boolean refresh, final ActivityMode mode) {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = connMgr.getActiveNetworkInfo();
         if (info != null && info.isConnected()) {
-            getDataFromServer(refresh, mode);
+            if (ServerUp) {
+                getDataFromServer(refresh, mode);
+            } else {
+                //Inflate view
+            }
         } else {
-            //findViewById(R.id.networkError).setVisibility(View.VISIBLE);
+            TextView t = (TextView) findViewById(R.id.textView);
+            TextView tt = (TextView) findViewById(R.id.textView2);
+            Button b = (Button) findViewById(R.id.button);
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    findViewById(R.id.networkError).setVisibility(View.GONE);
+                    findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+                    initializeData(false, mode);
+                }
+            });
+            t.setText(R.string.no_internet_main);
+            tt.setText(R.string.no_internet_sub);
+            if (refresh) playerRefresh.setRefreshing(false);
+            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+            findViewById(R.id.player_cards).setVisibility(View.GONE);
+            findViewById(R.id.networkError).setVisibility(View.VISIBLE);
         }
     }
 
@@ -125,14 +149,16 @@ public class GeneralItemActivity extends AppCompatActivity {
                         data.clear();
                         JsonObject obj = new JsonParser().parse(s).getAsJsonObject();
                         JsonArray playerarray = obj.getAsJsonArray("PLAYERS");
-                        for (JsonElement player : playerarray) {
-                            JsonObject p = player.getAsJsonObject();
-                            String n = p.get("name").getAsString();
-                            String u = p.get("uuid").getAsString();
-                            String w = p.get("world").getAsString();
-                            boolean b = (p.get("afk").getAsInt() == 1);
-                            PlayerWrapper wr = new PlayerWrapper(n, u, b, w);
-                            data.add(wr);
+                        if (playerarray.size() > 1 && !playerarray.get(0).getAsJsonObject().get("name").equals("")) {
+                            for (JsonElement player : playerarray) {
+                                JsonObject p = player.getAsJsonObject();
+                                String n = p.get("name").getAsString();
+                                String u = p.get("uuid").getAsString();
+                                String w = p.get("world").getAsString();
+                                boolean b = (p.get("afk").getAsInt() == 1);
+                                PlayerWrapper wr = new PlayerWrapper(n, u, b, w);
+                                data.add(wr);
+                            }
                         }
                         playerAdapter.notifyDataSetChanged();
                         if (r) playerRefresh.setRefreshing(false);
